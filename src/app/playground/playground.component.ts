@@ -1,0 +1,277 @@
+import { Component, HostListener, OnInit } from '@angular/core';
+
+interface snakeCell {
+  x: number;
+  y: number;
+}
+
+@Component({
+  selector: 'app-playground',
+  templateUrl: './playground.component.html',
+  styleUrls: ['./playground.component.scss'],
+})
+export class PlaygroundComponent implements OnInit {
+  myArray: number[][] = [];
+
+  gridRows: number[] = new Array(10);
+  gridCols: number[] = new Array(10);
+
+  snake: snakeCell[] = [
+    {
+      x: 5,
+      y: 3,
+    },
+    {
+      x: 5,
+      y: 2,
+    },
+    {
+      x: 5,
+      y: 1,
+    },
+  ];
+
+  snakeRow: number = 5;
+  snakeCol: number = 5;
+
+  direction: string = 'right';
+  up: string = 'up';
+  down: string = 'down';
+  left: string = 'left';
+  right: string = 'right';
+
+  randomColFood: number = Math.floor(Math.random() * this.snakeCol) + 1;
+  randomRowFood: number = Math.floor(Math.random() * this.snakeRow) + 1;
+
+  randomColBoomb: number = Math.floor(Math.random() * this.snakeCol) + 1;
+  randomRowBoomb: number = Math.floor(Math.random() * this.snakeRow) + 1;
+
+  gameOver = false;
+  count: number = 0;
+  level: number = 1;
+  intervalTime: number = 2000;
+  intervalName: any;
+
+  constructor() {
+    //food count
+    for (let i = 0; i < 10; i++) {
+      this.myArray[i] = [];
+      for (let j = 0; j < 10; j++) {
+        if (i === this.randomColFood && j === this.randomRowFood) {
+        } else {
+          this.myArray[i][j] = 0;
+        }
+      }
+    }
+  }
+
+  ngOnInit(): void {
+    this.snake.forEach((cell, index) => {
+      this.myArray[cell.x][cell.y] = 2;
+      // console.log('sarchili X', cell.x, 'sarchili Y', cell.y);
+      // console.log('ROW', this.randomRowBoomb, 'COL', this.randomColBoomb);
+
+      // generate food and boomb
+      if (this.randomRowFood === cell.x && this.randomColFood === cell.y) {
+        this.randomColFood = Math.floor(Math.random() * 10);
+        this.randomRowFood = Math.floor(Math.random() * 10);
+      }
+      if (this.randomRowBoomb === cell.x && this.randomColBoomb === cell.y) {
+        this.randomColBoomb = Math.floor(Math.random() * 10);
+        this.randomRowBoomb = Math.floor(Math.random() * 10);
+      }
+    });
+    this.intervalName = setInterval(() => {
+      this.moveIcon();
+      this.foodAte();
+      this.checkDeath();
+    }, 2000);
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    switch (event.key) {
+      case 'ArrowUp':
+        if (this.direction !== 'down') {
+          this.direction = 'up';
+        }
+        break;
+      case 'ArrowDown':
+        if (this.direction !== 'up') {
+          this.direction = 'down';
+        }
+        break;
+      case 'ArrowLeft':
+        if (this.direction !== 'right') {
+          this.direction = 'left';
+        }
+        break;
+      case 'ArrowRight':
+        if (this.direction !== 'left') {
+          this.direction = 'right';
+        }
+        break;
+    }
+    this.moveIcon();
+  }
+
+  moveIcon() {
+    this.snake.unshift({
+      ...this.snake[0],
+    });
+
+    switch (this.direction) {
+      case this.up:
+        // moveUp()
+        if (this.snake[0].x > 0) {
+          this.snake[0].x--;
+          this.foodAte();
+          this.checkDeath();
+        } else {
+          this.snake[0].x = 9;
+          this.foodAte();
+          this.checkDeath();
+        }
+        break;
+      case this.down:
+        // moveDown()
+        if (this.snake[0].x < this.gridRows.length - 1) {
+          this.snake[0].x++;
+          this.foodAte();
+          this.checkDeath();
+        } else {
+          this.snake[0].x = 0;
+          this.foodAte();
+          this.checkDeath();
+        }
+        break;
+      case this.left:
+        // moveLeft()
+        if (this.snake[0].y > 0) {
+          this.snake[0].y--;
+          this.foodAte();
+          this.checkDeath();
+        } else {
+          this.snake[0].y = 9;
+          this.foodAte();
+          this.checkDeath();
+        }
+        break;
+      case this.right:
+        // moveRight()
+        if (this.snake[0].y < this.gridCols.length - 1) {
+          this.snake[0].y++;
+          this.foodAte();
+          this.checkDeath();
+        } else {
+          this.snake[0].y = 0;
+          this.foodAte();
+          this.checkDeath();
+        }
+        break;
+      default:
+        break;
+    }
+
+    this.myArray[this.snake[this.snake.length - 1].x][
+      this.snake[this.snake.length - 1].y
+    ] = 0;
+    this.snake.pop();
+    this.snake.forEach((cell, index) => {
+      this.myArray[cell.x][cell.y] = 2;
+      // console.log(this.myArray[cell.x][cell.y]);
+    });
+    this.myArray;
+  }
+
+  foodAte() {
+    // if food and boom are on the same square generate them again
+    if (
+      this.randomColFood === this.randomColBoomb &&
+      this.randomRowFood === this.randomRowBoomb
+    ) {
+      this.randomColFood = Math.floor(Math.random() * 10);
+      this.randomRowFood = Math.floor(Math.random() * 10);
+    }
+
+    // if food is generate on snake generate them again
+    this.snake.forEach((cell, index) => {
+      if (cell.y === this.randomColFood && cell.x === this.randomRowFood) {
+        this.count++;
+        this.randomColFood = Math.floor(Math.random() * 10);
+        this.randomRowFood = Math.floor(Math.random() * 10);
+        this.snake.push(this.snake[this.snake.length - 1]);
+      }
+    });
+
+    if (this.count === 5) {
+      this.level = 2;
+      clearInterval(this.intervalName);
+      this.intervalName = setInterval(() => {
+        this.moveIcon();
+        this.foodAte();
+        this.checkDeath();
+      }, 1500);
+    }
+
+    if (this.count === 10) {
+      this.level = 3;
+      clearInterval(this.intervalName);
+      this.intervalName = setInterval(() => {
+        this.moveIcon();
+        this.foodAte();
+        this.checkDeath();
+      }, 1000);
+    }
+
+    if (this.count === 15) {
+      this.level = 4;
+      clearInterval(this.intervalName);
+      this.intervalName = setInterval(() => {
+        this.moveIcon();
+        this.foodAte();
+        this.checkDeath();
+      }, 500);
+    }
+
+    if (this.count > 15) {
+      this.level = 5;
+      clearInterval(this.intervalName);
+      this.intervalName = setInterval(() => {
+        this.moveIcon();
+        this.foodAte();
+        this.checkDeath();
+      }, 250);
+    }
+
+    if (this.count > 20) {
+      this.level = 6;
+      clearInterval(this.intervalName);
+      this.intervalName = setInterval(() => {
+        this.moveIcon();
+        this.foodAte();
+        this.checkDeath();
+      }, 100);
+    }
+  }
+
+  checkDeath() {
+    this.snake.forEach((cell) => {
+      if (
+        (cell !== this.snake[0] &&
+          this.snake[0].x === cell.x &&
+          this.snake[0].y === cell.y) ||
+        (this.randomColBoomb === this.snake[0].y &&
+          this.randomRowBoomb === this.snake[0].x)
+      ) {
+        this.gameOver = true;
+        setTimeout(() => {
+          // window.alert(
+          //   'Game Over, score: ' + this.count + ' & level: ' + this.level
+          // );
+          window.location.reload();
+        }, 500);
+      }
+    });
+  }
+}

@@ -1,0 +1,95 @@
+.title {
+  color: #ccc;
+  margin: 2.5%;
+  font-size: x-large;
+}
+
+table {
+  border-collapse: collapse;
+  margin: 2.5% auto;
+}
+
+td {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #ccc;
+  align-items: center;
+}
+
+.item {
+  background-color: yellow;
+  border: 2px solid black;
+  width: 40px;
+  height: 40px;
+  display: flex;
+}
+
+.food {
+  background-color: green;
+  border: 2px solid black;
+  width: 40px;
+  height: 40px;
+  display: flex;
+}
+
+.foodGone {
+  display: none;
+}
+
+.squareGone {
+  display: none;
+}
+
+.textHidden {
+  display: none !important;
+}
+
+.gameOverMsg {
+  font-size: 36px;
+  font-weight: bold;
+  color: #ccc;
+  text-align: center;
+  letter-spacing: 2px;
+  h3 {
+    font-size: xx-large;
+  }
+  p {
+    margin: 1%;
+    font-size: large;
+  }
+}
+
+.score {
+  font-size: large;
+  color: #ccc;
+  display: flex;
+  flex-direction: row;
+  margin: 1%;
+  justify-content: space-evenly;
+  font-size: x-large;
+}
+
+.alignItems div {
+  margin: auto;
+}
+
+.alignLegendItems {
+  display: flex;
+  flex-direction: row;
+  color: #ccc;
+  align-items: center;
+  margin: 0.5%;
+  p {
+    margin: 5px;
+  }
+}
+.legendItems {
+  margin: 0%;
+  display: flex;
+  flex-direction: row;
+}
+
+.tableLegend {
+  display: flex;
+  flex-direction: row;
+}

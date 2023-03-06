@@ -1,0 +1,58 @@
+<header ngClass="title">
+  <h1>World Snake Cup 🏆</h1>
+  <div class="legendItems">
+    <div class="alignLegendItems">
+      <div class="boomb"></div>
+      <p>: boomb</p>
+    </div>
+
+    <div class="alignLegendItems">
+      <div class="food"></div>
+      <p>: food</p>
+    </div>
+
+    <div class="alignLegendItems">
+      <div class="item"></div>
+      <div class="item"></div>
+      <div class="item"></div>
+      <p>: snake</p>
+    </div>
+  </div>
+  <hr />
+</header>
+
+<div
+  *ngIf="
+    (snake[0].x === randomRowBoomb && snake[0].y === randomColBoomb) ||
+    gameOver === true
+  "
+  class="gameOverMsg"
+>
+  <h3>GAME OVER</h3>
+  <p>score: {{ count }} & level: {{ level }}</p>
+  <!-- <button>Play again</button> -->
+</div>
+
+<div ngClass="score">
+  <p>score : {{ count }}</p>
+  <p>level : {{ level }}</p>
+</div>
+
+<table>
+  <tr *ngFor="let row of gridRows; let i = index">
+    <td *ngFor="let col of gridCols; let j = index">
+      <div ngClass="alignItems">
+        <div
+          [ngClass]="{
+            boomb: i === randomRowBoomb && j === randomColBoomb,
+            squareGone:
+              snakeRow === randomRowBoomb && snakeCol === randomColBoomb,
+            food: i === randomRowFood && j === randomColFood,
+            foodGone: snakeRow === randomRowFood && snakeCol === randomColFood,
+            item: myArray[i][j] === 2
+          }"
+        ></div>
+      </div>
+    </td>
+  </tr>
+</table>
