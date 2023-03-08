@@ -49,7 +49,6 @@ export class PlaygroundComponent implements OnInit {
   gameOver = false;
   count: number = 0;
   level: number = 1;
-  intervalTime: number = 2000;
   intervalName: any;
 
   constructor() {
@@ -57,10 +56,10 @@ export class PlaygroundComponent implements OnInit {
     for (let i = 0; i < 10; i++) {
       this.myArray[i] = [];
       for (let j = 0; j < 10; j++) {
-        if (i === this.randomColFood && j === this.randomRowFood) {
-        } else {
-          this.myArray[i][j] = 0;
-        }
+        // if (i === this.randomColFood && j === this.randomRowFood) {
+        // } else {
+        //   this.myArray[i][j] = 0;
+        // }
       }
     }
   }
@@ -68,21 +67,35 @@ export class PlaygroundComponent implements OnInit {
   ngOnInit(): void {
     this.snake.forEach((cell, index) => {
       this.myArray[cell.x][cell.y] = 2;
-      // console.log('sarchili X', cell.x, 'sarchili Y', cell.y);
-      // console.log('ROW', this.randomRowBoomb, 'COL', this.randomColBoomb);
 
-      // generate food and boomb
+      // generate food
       if (this.randomRowFood === cell.x && this.randomColFood === cell.y) {
         this.randomColFood = Math.floor(Math.random() * 10);
         this.randomRowFood = Math.floor(Math.random() * 10);
       }
-      if (this.randomRowBoomb === cell.x && this.randomColBoomb === cell.y) {
-        this.randomColBoomb = Math.floor(Math.random() * 10);
-        this.randomRowBoomb = Math.floor(Math.random() * 10);
-      }
+
+      // change boomb position at every 7 sec
+      clearInterval(this.intervalName);
+      this.intervalName = setInterval(() => {
+        if (this.gameOver !== true) {
+          this.randomColBoomb = Math.floor(Math.random() * 10);
+          this.randomRowBoomb = Math.floor(Math.random() * 10);
+          // if snake is on the same square with new boom generate again
+          if (
+            this.randomRowBoomb === cell.x &&
+            this.randomColBoomb === cell.y
+          ) {
+            this.randomColBoomb = Math.floor(Math.random() * 10);
+            this.randomRowBoomb = Math.floor(Math.random() * 10);
+          }
+        }
+      }, 7000);
     });
+
     this.intervalName = setInterval(() => {
-      this.moveIcon();
+      if (this.gameOver !== true) {
+        this.moveIcon();
+      }
       this.foodAte();
       this.checkDeath();
     }, 2000);
@@ -90,27 +103,29 @@ export class PlaygroundComponent implements OnInit {
 
   @HostListener('window:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
-    switch (event.key) {
-      case 'ArrowUp':
-        if (this.direction !== 'down') {
-          this.direction = 'up';
-        }
-        break;
-      case 'ArrowDown':
-        if (this.direction !== 'up') {
-          this.direction = 'down';
-        }
-        break;
-      case 'ArrowLeft':
-        if (this.direction !== 'right') {
-          this.direction = 'left';
-        }
-        break;
-      case 'ArrowRight':
-        if (this.direction !== 'left') {
-          this.direction = 'right';
-        }
-        break;
+    if (this.gameOver !== true) {
+      switch (event.key) {
+        case 'ArrowUp':
+          if (this.direction !== 'down') {
+            this.direction = 'up';
+          }
+          break;
+        case 'ArrowDown':
+          if (this.direction !== 'up') {
+            this.direction = 'down';
+          }
+          break;
+        case 'ArrowLeft':
+          if (this.direction !== 'right') {
+            this.direction = 'left';
+          }
+          break;
+        case 'ArrowRight':
+          if (this.direction !== 'left') {
+            this.direction = 'right';
+          }
+          break;
+      }
     }
     this.moveIcon();
   }
@@ -122,7 +137,7 @@ export class PlaygroundComponent implements OnInit {
 
     switch (this.direction) {
       case this.up:
-        // moveUp()
+        // moveUp
         if (this.snake[0].x > 0) {
           this.snake[0].x--;
           this.foodAte();
@@ -134,7 +149,7 @@ export class PlaygroundComponent implements OnInit {
         }
         break;
       case this.down:
-        // moveDown()
+        // moveDown
         if (this.snake[0].x < this.gridRows.length - 1) {
           this.snake[0].x++;
           this.foodAte();
@@ -146,7 +161,7 @@ export class PlaygroundComponent implements OnInit {
         }
         break;
       case this.left:
-        // moveLeft()
+        // moveLeft
         if (this.snake[0].y > 0) {
           this.snake[0].y--;
           this.foodAte();
@@ -158,7 +173,7 @@ export class PlaygroundComponent implements OnInit {
         }
         break;
       case this.right:
-        // moveRight()
+        // moveRight
         if (this.snake[0].y < this.gridCols.length - 1) {
           this.snake[0].y++;
           this.foodAte();
@@ -169,8 +184,6 @@ export class PlaygroundComponent implements OnInit {
           this.checkDeath();
         }
         break;
-      default:
-        break;
     }
 
     this.myArray[this.snake[this.snake.length - 1].x][
@@ -179,9 +192,7 @@ export class PlaygroundComponent implements OnInit {
     this.snake.pop();
     this.snake.forEach((cell, index) => {
       this.myArray[cell.x][cell.y] = 2;
-      // console.log(this.myArray[cell.x][cell.y]);
     });
-    this.myArray;
   }
 
   foodAte() {
@@ -204,11 +215,14 @@ export class PlaygroundComponent implements OnInit {
       }
     });
 
+    // increase level
     if (this.count === 5) {
       this.level = 2;
       clearInterval(this.intervalName);
       this.intervalName = setInterval(() => {
-        this.moveIcon();
+        if (this.gameOver !== true) {
+          this.moveIcon();
+        }
         this.foodAte();
         this.checkDeath();
       }, 1500);
@@ -218,7 +232,9 @@ export class PlaygroundComponent implements OnInit {
       this.level = 3;
       clearInterval(this.intervalName);
       this.intervalName = setInterval(() => {
-        this.moveIcon();
+        if (this.gameOver !== true) {
+          this.moveIcon();
+        }
         this.foodAte();
         this.checkDeath();
       }, 1000);
@@ -228,7 +244,9 @@ export class PlaygroundComponent implements OnInit {
       this.level = 4;
       clearInterval(this.intervalName);
       this.intervalName = setInterval(() => {
-        this.moveIcon();
+        if (this.gameOver !== true) {
+          this.moveIcon();
+        }
         this.foodAte();
         this.checkDeath();
       }, 500);
@@ -238,7 +256,9 @@ export class PlaygroundComponent implements OnInit {
       this.level = 5;
       clearInterval(this.intervalName);
       this.intervalName = setInterval(() => {
-        this.moveIcon();
+        if (this.gameOver !== true) {
+          this.moveIcon();
+        }
         this.foodAte();
         this.checkDeath();
       }, 250);
@@ -248,7 +268,9 @@ export class PlaygroundComponent implements OnInit {
       this.level = 6;
       clearInterval(this.intervalName);
       this.intervalName = setInterval(() => {
-        this.moveIcon();
+        if (this.gameOver !== true) {
+          this.moveIcon();
+        }
         this.foodAte();
         this.checkDeath();
       }, 100);
@@ -265,13 +287,11 @@ export class PlaygroundComponent implements OnInit {
           this.randomRowBoomb === this.snake[0].x)
       ) {
         this.gameOver = true;
-        setTimeout(() => {
-          // window.alert(
-          //   'Game Over, score: ' + this.count + ' & level: ' + this.level
-          // );
-          window.location.reload();
-        }, 500);
       }
     });
+  }
+
+  reload() {
+    window.location.reload();
   }
 }

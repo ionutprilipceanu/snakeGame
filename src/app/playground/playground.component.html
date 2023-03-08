@@ -21,38 +21,45 @@
   <hr />
 </header>
 
-<div
-  *ngIf="
-    (snake[0].x === randomRowBoomb && snake[0].y === randomColBoomb) ||
-    gameOver === true
-  "
-  class="gameOverMsg"
->
-  <h3>GAME OVER</h3>
-  <p>score: {{ count }} & level: {{ level }}</p>
-  <!-- <button>Play again</button> -->
-</div>
+<body>
+  <div
+    *ngIf="
+      (snake[0].x === randomRowBoomb && snake[0].y === randomColBoomb) ||
+      gameOver === true
+    "
+    class="gameOverMsg"
+  >
+    <h3>GAME OVER</h3>
+    <!-- <p>score: {{ count }} & level: {{ level }}</p> -->
+    <button class="resetButon" (click)="reload()">Play again</button>
+  </div>
 
-<div ngClass="score">
-  <p>score : {{ count }}</p>
-  <p>level : {{ level }}</p>
-</div>
+  <div ngClass="score">
+    <p>score : {{ count }}</p>
+    <p>level : {{ level }}</p>
+  </div>
 
-<table>
-  <tr *ngFor="let row of gridRows; let i = index">
-    <td *ngFor="let col of gridCols; let j = index">
-      <div ngClass="alignItems">
-        <div
-          [ngClass]="{
-            boomb: i === randomRowBoomb && j === randomColBoomb,
-            squareGone:
-              snakeRow === randomRowBoomb && snakeCol === randomColBoomb,
-            food: i === randomRowFood && j === randomColFood,
-            foodGone: snakeRow === randomRowFood && snakeCol === randomColFood,
-            item: myArray[i][j] === 2
-          }"
-        ></div>
-      </div>
-    </td>
-  </tr>
-</table>
+  <div
+    [ngClass]="{
+      blur: gameOver === true
+    }"
+  >
+    <table>
+      <tr *ngFor="let row of gridRows; let i = index">
+        <td *ngFor="let col of gridCols; let j = index">
+          <div ngClass="alignItems">
+            <div
+              [ngClass]="{
+                boomb: i === randomRowBoomb && j === randomColBoomb,
+                food: i === randomRowFood && j === randomColFood,
+                foodGone:
+                  snakeRow === randomRowFood && snakeCol === randomColFood,
+                item: myArray[i][j] === 2
+              }"
+            ></div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
