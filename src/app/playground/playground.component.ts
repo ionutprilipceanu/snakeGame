@@ -1,4 +1,11 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Output,
+  OnInit,
+  EventEmitter,
+  OnChanges,
+} from '@angular/core';
 
 interface snakeCell {
   x: number;
@@ -47,20 +54,25 @@ export class PlaygroundComponent implements OnInit {
   randomRowBoomb: number = Math.floor(Math.random() * this.snakeRow) + 1;
 
   gameOver = false;
-  count: number = 0;
+  count: any = 0;
   level: number = 1;
   intervalName: any;
 
+  name: string;
+  storedPlayers: any = [];
+
   constructor() {
-    //food count
+    this.storedPlayers = Object.keys(sessionStorage)
+      .filter((key) => key.startsWith('player-'))
+      .map((key) => {
+        const user: any = sessionStorage.getItem(key);
+        return JSON.parse(user);
+      })
+      .sort((a: any, b: any) => b.count - a.count);
+
+    //display grid
     for (let i = 0; i < 10; i++) {
       this.myArray[i] = [];
-      for (let j = 0; j < 10; j++) {
-        // if (i === this.randomColFood && j === this.randomRowFood) {
-        // } else {
-        //   this.myArray[i][j] = 0;
-        // }
-      }
     }
   }
 
@@ -101,6 +113,36 @@ export class PlaygroundComponent implements OnInit {
     }, 2000);
   }
 
+  // save username and score into session storage
+  saveName() {
+    if (this.name) {
+      if (this.gameOver === true) {
+        const key = `player-${new Date().getTime()}`;
+        sessionStorage.setItem(
+          key,
+          JSON.stringify({ name: this.name, count: this.count })
+        );
+        this.name = '';
+        this.count = '';
+      }
+      this.storedPlayers = Object.keys(sessionStorage)
+        .filter((key) => key.startsWith('player-'))
+        .map((key) => {
+          const user: any = sessionStorage.getItem(key);
+          return JSON.parse(user);
+        })
+        .sort((a: any, b: any) => b.count - a.count);
+    }
+    return;
+  }
+
+  // clear rank
+  clearSessionStorage() {
+    sessionStorage.clear();
+    window.location.reload();
+  }
+
+  // change snake direction
   @HostListener('window:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
     if (this.gameOver !== true) {
@@ -195,8 +237,8 @@ export class PlaygroundComponent implements OnInit {
     });
   }
 
+  // if food and boom are on the same square generate them again
   foodAte() {
-    // if food and boom are on the same square generate them again
     if (
       this.randomColFood === this.randomColBoomb &&
       this.randomRowFood === this.randomRowBoomb

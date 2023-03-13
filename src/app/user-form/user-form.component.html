@@ -1,0 +1,24 @@
+<div class="body">
+  <form (submit)="saveName()">
+    <label for="name">Username</label>
+    <input
+      type="text"
+      id="name"
+      name="name"
+      [(ngModel)]="name"
+      placeholder="Type in your username..."
+    />
+    <button class="addBtn" type="submit">Add player</button>
+    <button class="clearBtn" (click)="clearSessionStorage()">Clear Rank</button>
+  </form>
+
+  <div class="rank">
+    <hr />
+    <h2>Rank:</h2>
+    <ul class="user-list">
+      <li class="user-item" *ngFor="let name of storedNames">
+        {{ name }} - score:
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,75 @@
+.body {
+  margin: 10% auto 0 auto;
+  padding: 30px;
+  width: 400px;
+  height: auto;
+  overflow: hidden;
+  background: white;
+  border-radius: 10px;
+}
+
+.body label {
+  font-size: 24px;
+  color: darkgray;
+  cursor: pointer;
+}
+
+.body input {
+  margin: 15px 0;
+  padding: 15px 10px;
+  width: 100%;
+  outline: none;
+  border: 1px solid #bbb;
+  border-radius: 20px;
+  display: inline-block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: 0.2s ease all;
+  -moz-transition: 0.2s ease all;
+  -ms-transition: 0.2s ease all;
+  -o-transition: 0.2s ease all;
+  transition: 0.2s ease all;
+}
+
+.clearBtn,
+.addBtn {
+  margin-top: 1%;
+  width: 140px;
+  height: 45px;
+  font-family: "Roboto", sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #000;
+  background-color: #fff;
+  border: none;
+  border-radius: 45px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  margin: 1%;
+}
+
+.clearBtn:hover,
+.addBtn:hover {
+  background-color: #6dcfec;
+  box-shadow: 0px 15px 20px rgba(33, 129, 167, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+  margin: 1%;
+}
+
+.rank {
+  margin: 2.5%;
+
+  h2 {
+    color: darkgray;
+  }
+
+  li {
+    list-style-type: none;
+  }
+}

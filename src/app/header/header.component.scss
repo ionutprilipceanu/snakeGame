@@ -1,0 +1,43 @@
+.title {
+  color: #ccc;
+  margin: 2.5%;
+  font-size: x-large;
+}
+
+.alignLegendItems {
+  display: flex;
+  flex-direction: row;
+  color: #ccc;
+  align-items: center;
+  margin: 0.5%;
+  p {
+    margin: 5px;
+  }
+}
+
+.legendItems {
+  margin: 0%;
+  display: flex;
+  flex-direction: row;
+}
+
+.tableLegend {
+  display: flex;
+  flex-direction: row;
+}
+
+.item {
+  background-color: yellow;
+  border: 2px solid black;
+  width: 40px;
+  height: 40px;
+  display: flex;
+}
+
+.food {
+  background-color: green;
+  border: 2px solid black;
+  width: 40px;
+  height: 40px;
+  display: flex;
+}
