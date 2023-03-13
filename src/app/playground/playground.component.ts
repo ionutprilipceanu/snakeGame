@@ -1,11 +1,4 @@
-import {
-  Component,
-  HostListener,
-  Output,
-  OnInit,
-  EventEmitter,
-  OnChanges,
-} from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 
 interface snakeCell {
   x: number;
@@ -62,6 +55,7 @@ export class PlaygroundComponent implements OnInit {
   storedPlayers: any = [];
 
   constructor() {
+    // save player to session storage
     this.storedPlayers = Object.keys(sessionStorage)
       .filter((key) => key.startsWith('player-'))
       .map((key) => {
@@ -115,24 +109,23 @@ export class PlaygroundComponent implements OnInit {
 
   // save username and score into session storage
   saveName() {
-    if (this.name) {
-      if (this.gameOver === true) {
-        const key = `player-${new Date().getTime()}`;
-        sessionStorage.setItem(
-          key,
-          JSON.stringify({ name: this.name, count: this.count })
-        );
-        this.name = '';
-        this.count = '';
-      }
-      this.storedPlayers = Object.keys(sessionStorage)
-        .filter((key) => key.startsWith('player-'))
-        .map((key) => {
-          const user: any = sessionStorage.getItem(key);
-          return JSON.parse(user);
-        })
-        .sort((a: any, b: any) => b.count - a.count);
+    if (this.name && this.gameOver === true) {
+      const key = `player-${new Date().getTime()}`;
+      sessionStorage.setItem(
+        key,
+        JSON.stringify({ name: this.name, count: this.count })
+      );
+      this.name = '';
+      this.count = '';
     }
+    this.storedPlayers = Object.keys(sessionStorage)
+      .filter((key) => key.startsWith('player-'))
+      .map((key) => {
+        const user: any = sessionStorage.getItem(key);
+        return JSON.parse(user);
+      })
+      .sort((a: any, b: any) => b.count - a.count);
+
     return;
   }
 
